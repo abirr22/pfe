@@ -14,10 +14,7 @@ if [ -z "$GITHUB_TOKEN" ]; then
   exit 1
 fi
 
-# Authentification avec le token
-echo "$GITHUB_TOKEN" | gh auth login --with-token
-
-# Créer la Pull Request
+# Créer la Pull Request directement, GitHub CLI utilisera automatiquement GITHUB_TOKEN
 gh pr create \
   --base preprod \
   --head test \
