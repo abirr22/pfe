@@ -14,17 +14,22 @@ if [ -z "$GITHUB_TOKEN" ]; then
   exit 1
 fi
 
-# Authentification avec le token
-echo "$GITHUB_TOKEN" | gh auth login --with-token
-
 # Branche source dynamique depuis Jenkins
 SOURCE_BRANCH=${BRANCH:-preprod}
+REPO=ton_organisation/ton_repo  # Remplace par ton repo
 
-# Créer la Pull Request
-gh pr create \
-  --base main \
-  --head "$SOURCE_BRANCH" \
-  --title "🚀 PR automatique : $SOURCE_BRANCH -> main" \
-  --body "Cette Pull Request a été générée automatiquement par Jenkins pour la mise en prod."
+# Vérifier si un PR existe déjà
+EXISTING_PR=$(gh pr list --head "$SOURCE_BRANCH" --base main --repo "$REPO" --json number -q '.[0].number')
 
-echo "✅ Pull Request vers main (prod) créée avec succès."
+if [ -z "$EXISTING_PR" ]; then
+    # Créer le PR si aucun n'existe
+    gh pr create \
+      --base main \
+      --head "$SOURCE_BRANCH" \
+      --title "🚀 PR automatique : $SOURCE_BRANCH -> main" \
+      --body "Cette Pull Request a été générée automatiquement par Jenkins pour la mise en prod." \
+      --repo "$REPO"
+    echo "✅ Pull Request vers main (prod) créée avec succès."
+else
+    echo "ℹ️ Un PR existe déjà : #$EXISTING_PR"
+fi
