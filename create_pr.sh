@@ -17,11 +17,14 @@ fi
 # Authentification avec le token
 echo "$GITHUB_TOKEN" | gh auth login --with-token
 
-# Créer la Pull Request de preprod -> main
+# Branche source dynamique depuis Jenkins
+SOURCE_BRANCH=${BRANCH:-preprod}
+
+# Créer la Pull Request
 gh pr create \
   --base main \
-  --head preprod \
-  --title "🚀 PR automatique : preprod -> main" \
+  --head "$SOURCE_BRANCH" \
+  --title "🚀 PR automatique : $SOURCE_BRANCH -> main" \
   --body "Cette Pull Request a été générée automatiquement par Jenkins pour la mise en prod."
 
 echo "✅ Pull Request vers main (prod) créée avec succès."
