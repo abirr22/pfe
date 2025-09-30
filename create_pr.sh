@@ -14,11 +14,23 @@ if [ -z "$GITHUB_TOKEN" ]; then
   exit 1
 fi
 
-# Créer la Pull Request directement, GitHub CLI utilisera automatiquement GITHUB_TOKEN
+BRANCH="preprod"
+TARGET="main"
+
+# Vérifier s’il existe une PR ouverte de preprod vers main
+EXISTING_PR=$(gh pr list --head "$BRANCH" --base "$TARGET" --state open --json number --jq '.[0].number')
+
+if [ -n "$EXISTING_PR" ]; then
+  echo "🔄 Fermeture de la PR existante #$EXISTING_PR..."
+  gh pr close "$EXISTING_PR" --delete-branch=false
+fi
+
+# Créer une nouvelle PR
+echo "✨ Création d'une nouvelle PR de $BRANCH vers $TARGET..."
 gh pr create \
-  --base main \
-  --head preprod \
-  --title "PR automatique : preprod -> main" \
+  --base "$TARGET" \
+  --head "$BRANCH" \
+  --title "PR automatique : $BRANCH -> $TARGET" \
   --body "Cette Pull Request a été générée automatiquement par Jenkins pour la mise en prod."
 
-echo "✅ Pull Request de preprod vers main créée avec succès."
+echo "✅ Pull Request de $BRANCH vers $TARGET créée avec succès."
