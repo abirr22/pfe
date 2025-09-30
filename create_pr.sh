@@ -35,4 +35,5 @@ gh pr create \
     --title "$PR_TITLE" \
     --body "Cette Pull Request a été générée automatiquement par Jenkins."
 
+
 echo "✅ Pull Request de $BRANCH vers $TARGET créée avec succès : $PR_TITLE"
