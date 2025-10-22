@@ -12,7 +12,6 @@ if [ -z "$GITHUB_TOKEN" ]; then
     echo "❌ La variable d'environnement GITHUB_TOKEN n'est pas définie."
     exit 1
 fi
-
 # Branches fixes
 BRANCH_SOURCE="test"        # toujours la branche test
 BRANCH_TARGET="preprod"     # toujours la branche preprod
@@ -36,3 +35,5 @@ gh pr create \
     --body "Cette Pull Request a été générée automatiquement par Jenkins."
 
 echo "✅ Pull Request de $BRANCH_SOURCE vers $BRANCH_TARGET créée avec succès : $PR_TITLE"
+
+////////////////////
